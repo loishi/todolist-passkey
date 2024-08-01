@@ -75,15 +75,15 @@ async function loadTodos() {
         const todos = await res.json();
         const todoList = document.getElementById('todo-list');
         todoList.innerHTML = '';
-        todos.forEach(todo => {
+        for (const todo of todos) {
             const li = document.createElement('li');
             li.innerHTML = `
-                <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="updateTodo('${todo.id}', this.checked)">
-                <span>${todo.title}</span>
+                <input type="checkbox" id="todo-${todo.id}" ${todo.completed ? 'checked' : ''} onchange="updateTodo('${todo.id}', this.checked)">
+                <label for="todo-${todo.id}" class="${todo.completed ? 'completed' : ''}">${todo.title}</label>
                 <button onclick="deleteTodo('${todo.id}')">Delete</button>
             `;
             todoList.appendChild(li);
-        });
+        }
     } catch (error) {
         console.error('Error loading todos:', error);
     }
@@ -113,6 +113,11 @@ async function updateTodo(id, completed) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ completed }),
         });
+        // Update the UI without reloading all todos
+        const label = document.querySelector(`label[for="todo-${id}"]`);
+        if (label) {
+            label.classList.toggle('completed', completed);
+        }
     } catch (error) {
         console.error('Error updating todo:', error);
     }

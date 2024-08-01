@@ -18,3 +18,8 @@ ul {
 li {
   margin: 10px 0;
 }
+
+.completed {
+  text-decoration: line-through;
+  color: #888;
+}
